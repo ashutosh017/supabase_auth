@@ -1,65 +1,78 @@
-import Image from "next/image";
+import { getAllBases } from "./actions/base";
+import { SignInDialog } from "./components/signin-dialog";
+import UploadBaseDialog from "./components/upload-base-dialog";
+// import supabase from "./lib/supabase-client";
+import { createClient } from "./lib/supabase_server_client";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const data = await getAllBases();
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+  console.log("session: ", session);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="container mx-auto min-h-screen pt-6 px-4 w-full">
+      <div className="flex justify-between">
+        <UploadBaseDialog />
+        {session ? (
+          <div className="flex gap-2 items-center justify-center">
+            <div className="btn btn-primary text-xl font-bold">
+              {session.user.email?.split("")[0]}
+              {/* {session.user.user_metadata.name} */}
+            </div>
+            <button className="btn btn-secondary">Logout</button>
+          </div>
+        ) : (
+          <SignInDialog />
+        )}
+      </div>
+      <h2 className="text-2xl font-extrabold mt-2 lg:mt-4">Recently Added</h2>
+
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {data.success &&
+          data.data.map((d) => (
+            <BaseCard link={d.imgUrl} key={d.id} thLevel={d.thLevel} />
+          ))}
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+        <BaseCard link="https://dropinblog.net/34253310/files/featured/imagem-2025-04-16-133753129.png" />
+      </div>
     </div>
   );
 }
+
+export const BaseCard = ({
+  thLevel,
+  link,
+}: {
+  thLevel?: string | number;
+  link: string;
+}) => {
+  return (
+    // Replaced w-96 with w-full so the card conforms to the grid column size
+    <div className="card bg-base-100 w-full shadow-sm border border-base-200">
+      <figure>
+        {/* Added w-full and object-cover to ensure the image scales nicely */}
+        <img src={link} alt="coc base" className="w-full object-cover" />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">Town Hall {thLevel ? thLevel : "13"}</h2>
+        <p>
+          A card component has a figure, a body part, and inside body there are
+          title and actions parts
+        </p>
+        <div className="card-actions justify-end">
+          <button className="btn btn-primary">Copy Base</button>
+        </div>
+      </div>
+    </div>
+  );
+};
