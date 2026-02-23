@@ -1,4 +1,5 @@
 'use server'
+import { revalidatePath } from "next/cache";
 import { ApiResponse } from "../lib/api_response";
 // import supabase from "../lib/supabase-client";
 import { createClient } from "../lib/supabase_server_client";
@@ -25,6 +26,7 @@ export async function signInWithOtp(prevState: any, formData: FormData): Promise
             };
         }
 
+        revalidatePath("/");
         return {
             success: true,
             data
@@ -45,4 +47,10 @@ export async function signInWithOtp(prevState: any, formData: FormData): Promise
         data: { emailSent: true, email },
         message: "Code sent to your email"
     };
+}
+
+export async function signOut() {
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+    revalidatePath("/");
 }

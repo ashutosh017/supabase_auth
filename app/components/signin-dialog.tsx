@@ -24,36 +24,36 @@ export const SignInDialog = () => {
   return (
     <div>
       <button
-        className="btn btn-primary"
+        className="coc-btn coc-btn-green"
         onClick={() => dialogRef.current?.showModal()}
       >
         Sign In
       </button>
 
-      <dialog ref={dialogRef} className="modal">
-        <div className="modal-box w-full max-w-sm">
-          <h3 className="font-bold text-xl mb-6">
-            {isOtpStep ? "Verify Identity" : "Welcome Back"}
+      <dialog ref={dialogRef} className="modal coc-overlay">
+        <div className="modal-box coc-panel bg-[#E6E1D6] p-8 max-w-sm w-full">
+          <h3 className="font-luckiest text-2xl mb-6 text-[#4A3B2A] text-center uppercase drop-shadow-sm">
+            {isOtpStep ? "Verify Identity" : "Welcome Chief"}
           </h3>
 
           <form action={formAction} className="space-y-5">
             {!isOtpStep ? (
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Email Address</span>
+                  <span className="label-text font-bold text-[#4A3B2A]">Email Address</span>
                 </label>
                 <input
                   type="email"
                   name="email"
                   required
-                  placeholder="name@example.com"
-                  className="input input-bordered w-full"
+                  placeholder="chief@clash.com"
+                  className="coc-input w-full"
                 />
               </div>
             ) : (
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Enter 6-digit Code</span>
+                  <span className="label-text font-bold text-[#4A3B2A]">Enter 6-digit Code</span>
                 </label>
                 <input
                   type="text"
@@ -61,12 +61,12 @@ export const SignInDialog = () => {
                   required
                   maxLength={8}
                   placeholder="00000000"
-                  className="input input-bordered w-full text-center text-2xl tracking-widest"
+                  className="coc-input w-full text-center text-2xl tracking-widest font-mono"
                   autoFocus
                 />
                 {/* Keep the email in the form state */}
                 <input type="hidden" name="email" value={state.data?.email} />
-                <p className="text-xs mt-2 opacity-70">
+                <p className="text-xs mt-2 text-[#5c4d3c]">
                   Code sent to <strong>{state.data?.email}</strong>
                 </p>
               </div>
@@ -74,20 +74,20 @@ export const SignInDialog = () => {
 
             {/* Error handling */}
             {state.error && (
-              <p className="text-sm text-error bg-error/10 p-2 rounded">
+              <p className="text-sm text-red-600 bg-red-100 border-2 border-red-400 p-2 rounded font-bold">
                 {state.error}
               </p>
             )}
 
             {/* Success feedback (optional, e.g. "Code sent") */}
             {state.message && !state.error && (
-              <p className="text-sm text-success">{state.message}</p>
+              <p className="text-sm text-green-700 font-bold">{state.message}</p>
             )}
 
-            <div className="modal-action">
+            <div className="modal-action flex justify-between mt-6">
               <button
                 type="button"
-                className="btn btn-ghost"
+                className="coc-btn coc-btn-grey text-sm py-1 px-3"
                 onClick={() => dialogRef.current?.close()}
               >
                 Cancel
@@ -95,13 +95,13 @@ export const SignInDialog = () => {
 
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="coc-btn flex-1 ml-4"
                 disabled={isPending}
               >
                 {isPending && (
-                  <span className="loading loading-spinner loading-xs"></span>
+                  <span className="loading loading-spinner loading-xs mr-2"></span>
                 )}
-                {isOtpStep ? "Verify Code" : "Send OTP"}
+                {isOtpStep ? "Verify" : "Send Code"}
               </button>
             </div>
           </form>

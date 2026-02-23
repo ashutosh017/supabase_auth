@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Luckiest_Guy, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+const luckiestGuy = Luckiest_Guy({
+  variable: "--font-luckiest-guy",
+  weight: "400",
+  subsets: ["latin"],
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${luckiestGuy.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
